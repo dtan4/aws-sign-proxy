@@ -17,7 +17,7 @@ $ export AWS_REGION=ap-northeast-1
 ```
 
 ```bash
-$ aws-auth-proxy --service-name es --upstream-host search-zzz.ap-northeast-1.es.amazonaws.com
+$ aws-sign-proxy --service-name es --upstream-host search-zzz.ap-northeast-1.es.amazonaws.com
 $ open http://localhost:8080/_plugin/kibana
 ```
 
