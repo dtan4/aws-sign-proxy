@@ -1,4 +1,4 @@
-NAME     := aws-es-auth-proxy
+NAME     := aws-sign-proxy
 VERSION  := v1.0.0
 REVISION := $(shell git rev-parse --short HEAD)
 

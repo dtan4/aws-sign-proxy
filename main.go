@@ -30,7 +30,7 @@ type Options struct {
 func main() {
 	opts := optsFromEnv()
 
-	flags := pflag.NewFlagSet("aws-es-auth-proxy", pflag.ExitOnError)
+	flags := pflag.NewFlagSet("aws-sign-proxy", pflag.ExitOnError)
 
 	flags.StringVar(&opts.serviceName, "service-name", "", "AWS service name")
 	flags.StringVar(&opts.upstreamHost, "upstream-host", "", "Upstream endpoint")

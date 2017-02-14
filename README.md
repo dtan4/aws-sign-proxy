@@ -1,6 +1,6 @@
-# aws-es-auth-proxy
+# aws-sign-proxy
 
-HTTP proxy that signs requests for Amazon ES endpoints
+HTTP proxy that signs requests for AWS service endpoints
 
 This software is heavily inspired by [coreos/aws-auth-proxy](https://github.com/coreos/aws-auth-proxy).
 
