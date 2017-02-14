@@ -17,6 +17,7 @@ const (
 	defaultListenAddress  = ":8080"
 )
 
+// Options represents options of aws-sign-proxy
 type Options struct {
 	awsRegion      string
 	serviceName    string
@@ -30,11 +31,25 @@ func main() {
 
 	flags := pflag.NewFlagSet("aws-sign-proxy", pflag.ExitOnError)
 
+	var upstreamScheme, listenAddress string
+
+	if os.Getenv("AWS_SIGN_PROXY_UPSTREAM_SCHEME") == "" {
+		upstreamScheme = defaultUpstreamScheme
+	} else {
+		upstreamScheme = os.Getenv("AWS_SIGN_PROXY_UPSTREAM_SCHEME")
+	}
+
+	if os.Getenv("AWS_SIGN_PROXY_LISTEN_ADDRESS") == "" {
+		listenAddress = defaultListenAddress
+	} else {
+		listenAddress = os.Getenv("AWS_SIGN_PROXY_LISTEN_ADDRESS")
+	}
+
 	flags.StringVar(&opts.awsRegion, "aws-region", os.Getenv("AWS_REGION"), "AWS region")
-	flags.StringVar(&opts.serviceName, "service-name", "", "AWS service name")
-	flags.StringVar(&opts.upstreamHost, "upstream-host", "", "Upstream endpoint")
-	flags.StringVar(&opts.upstreamScheme, "upstream-scheme", defaultUpstreamScheme, "Scheme for upstream endpoint")
-	flags.StringVar(&opts.listenAddress, "listen-address", defaultListenAddress, "Address for proxy to listen on")
+	flags.StringVar(&opts.serviceName, "service-name", os.Getenv("AWS_SIGN_PROXY_SERVICE_NAME"), "AWS service name")
+	flags.StringVar(&opts.upstreamHost, "upstream-host", os.Getenv("AWS_SIGN_PROXY_UPSTREAM_HOST"), "Upstream endpoint")
+	flags.StringVar(&opts.upstreamScheme, "upstream-scheme", upstreamScheme, "Scheme for upstream endpoint")
+	flags.StringVar(&opts.listenAddress, "listen-address", listenAddress, "Address for proxy to listen on")
 
 	if err := flags.Parse(os.Args[1:]); err != nil {
 		log.Fatal(err)
