@@ -20,7 +20,7 @@ $ open http://localhost:8080/_plugin/kibana
 ### Options
 
 |Environment variable|Flag|Description|Required|Default|
-|---|---|---|---|
+|---|---|---|---|---|
 |`AWS_ACCESS_KEY_ID`| |AWS access key ID|Required| |
 |`AWS_SECRET_ACCESS_KEY`| |AWS secret access key|Required| |
 |`AWS_REGION`|`--region`|AWS region|Required| |
