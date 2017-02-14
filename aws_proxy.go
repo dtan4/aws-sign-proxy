@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -55,12 +56,22 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err = h.signer.Sign(req, nil, h.service, h.region, time.Now()); err != nil {
+	reqBuf, err := ioutil.ReadAll(r.Body)
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		log.Printf("[%s] < %s %s %d\n", requestID, r.Method, r.URL.Path, http.StatusBadRequest)
 		return
 	}
+
+	if _, err = h.signer.Sign(req, bytes.NewReader(reqBuf), h.service, h.region, time.Now()); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		log.Printf("[%s] < %s %s %d\n", requestID, r.Method, r.URL.Path, http.StatusBadRequest)
+		return
+	}
+
+	copyHeaders(r.Header, req.Header)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -73,8 +84,8 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	copyHeaders(resp.Header, w.Header())
 
-	buf := bytes.Buffer{}
-	if _, err := io.Copy(&buf, resp.Body); err != nil {
+	resBuf := bytes.Buffer{}
+	if _, err := io.Copy(&resBuf, resp.Body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		log.Printf("[%s] < %s %s %d\n", requestID, r.Method, r.URL.Path, http.StatusBadRequest)
@@ -82,7 +93,7 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(resp.StatusCode)
-	w.Write(buf.Bytes())
+	w.Write(resBuf.Bytes())
 	log.Printf("[%s] < %s %s %d\n", requestID, r.Method, r.URL.Path, resp.StatusCode)
 }
 
