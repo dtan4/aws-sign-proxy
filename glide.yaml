@@ -4,5 +4,5 @@ import:
   version: ~1.6.21
   subpackages:
   - aws/signer/v4
-  - aws/credentials
+  - aws/defaults
 - package: github.com/spf13/pflag
