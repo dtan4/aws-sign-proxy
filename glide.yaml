@@ -1,0 +1,8 @@
+package: github.com/dtan4/aws-es-auth-proxy
+import:
+- package: github.com/aws/aws-sdk-go
+  version: ~1.6.21
+  subpackages:
+  - aws/signer/v4
+  - aws/credentials
+- package: github.com/spf13/pflag
